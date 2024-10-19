@@ -1,37 +1,40 @@
 package sqlite
 
-import ("fmt" 
-"database/sql"
-_ "github.com/mattn/go-sqlite3") 
+import (
+	"database/sql"
+	"fmt"
+
+	_ "github.com/mattn/go-sqlite3" // init sql driver
+)
 
 type Storage struct {
-
-	database *sql.DB
+	db *sql.DB
 }
 
-func New(storagePath string) (*Storage,error){ 
-const op = "storage.sqlite.New"
+func New(storagePath string) (*Storage, error) {
+	const op = "storage.sqlite.New"
 
-database, err := sql.Open("sqlite3",storagePath)
-if err != nil{
-return nil, fmt.Errorf("%s: %w", op, err)
-}
+	db, err := sql.Open("sqlite3", "./url-shortener.db")
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
 
-statement, err := database.Prepare("CREATE TABLE IF NOT EXISTS url (
+	stmt, err := db.Prepare(`
+CREATE TABLE IF NOT EXISTS url(
 id INTEGER PRIMARY KEY,
- alias TEXT NOT NULL UNIQUE,
-  url TEXT NOT NULL);
-   CREATE INDEX IF NOT EXISTS idx_alias ON url(alias);
-   ")
+alias TEXT NOT NULL UNIQUE,
+url TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_alias ON url(alias);
+`)
 
-if err != nil {
-	return nil, fmt.Errorf("#{op}: #{err}")
-}
+	if err != nil {
+		return nil, fmt.Errorf("#{op}: #{err}")
+	}
 
-_, err = statement.Exec()
-if err != nil {
-	return nil, fmt.Errorf("%s: %w", op, err)
-}
+	_, err = stmt.Exec()
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	return &Storage{db: db}, nil
 
-return &Storage{database: database}, nil
 }
