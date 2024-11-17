@@ -1,0 +1,5 @@
+defaultConfigPath := "/shortcut_project6/url-shortener/config/local.yaml" // путь по которому будем брать локал ямл в конфиг паз
+	if err := os.Setenv("CONFIG_PATH", defaultConfigPath); err != nil {
+		log.Fatal("Error setting environment variable:", err)
+		return nil
+	}

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"log/slog"
 	"os"
+
+	"golang.org/x/exp/slog"
 
 	"github.com/Catharsis000/url-shortener.git/internal/config"
 	"github.com/Catharsis000/url-shortener.git/internal/lib/logger/sl"

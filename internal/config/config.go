@@ -23,16 +23,11 @@ type HTTPServer struct { // отдельный путь с вложенными 
 func MustLoad() *Config { // фунуция, которая прочитает файл с конфига и создаст и заполнит объект конфиг, который написали
 	// берем конфиг паз
 
-	defaultConfigPath := "/shortcut_project6/url-shortener/config/local.yaml" // путь по которому будем брать локал ямл в конфиг паз
-	if err := os.Setenv("CONFIG_PATH", defaultConfigPath); err != nil {
-		log.Fatal("Error setting environment variable:", err)
-		return nil
-	}
-
 	configPath := os.Getenv("CONFIG_PATH") // указываем где будем считывать файл с конфигом
 	if configPath == "" {
 		log.Fatal("CONFIG_PATH is not set")
 	}
+
 	// check if file exists проверяем существует ли файл
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Fatalf("config file does not exists: %s", configPath)
